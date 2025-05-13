@@ -130,13 +130,13 @@ sim_data <- simulate_crisis_data(
 )
 ```
 
-### Estimating Indirect Mortality
+### Fitting Hierarchical Model
 
 Fit a Bayesian hierarchical model to estimate indirect mortality using
 simulated data:
 
 ``` r
-fit <- estimate_indirect_mortality(
+fit <- fit_dag(
   data = sim_data,
   dag = dag,
   outcome = "Population mortality",
@@ -147,6 +147,16 @@ fit <- estimate_indirect_mortality(
 
 summary(fit)
 ```
+
+### Other Features To Describe/Finish/Test:
+
+- Simulating missingness in data observation (MCAR, MAR, MNAR) (https://github.com/OJWatson/nurah/tree/missingess/proxies)
+- Simulating proxies - data that is hoped to reflect a node but may have different effect size or directionality to node (https://github.com/OJWatson/nurah/tree/missingess/proxies)
+- Aggregation (how data collected at different spatial or temporal resolution could be aggregated and impact on model identifiability)
+- Custom model formula into model fit
+- Model summary plots and summaries for assessing identifiability against DAG
+
+
 
 ## Getting Help
 
