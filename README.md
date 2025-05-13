@@ -3,9 +3,15 @@
 
 # nurah
 
+<!-- badges: start -->
+
 [![Project Status: WIP – The project has reached a stable, usable state
 and is being actively
 developed.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Codecov test
+coverage](https://codecov.io/gh/OJWatson/nurah/graph/badge.svg)](https://app.codecov.io/gh/OJWatson/nurah)
+[![R-CMD-check](https://github.com/OJWatson/nurah/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/OJWatson/nurah/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 `nurah` is an R package designed as a research compendium to evaluate
 the feasibility of estimating mortality in humanitarian crises. It
@@ -106,6 +112,9 @@ head(parms)
 
 Use your DAG to simulate crisis data with defined spatial and temporal
 structures:
+
+N.B. WARNING - Currently this does not set any values in your DAG if the
+parent nodes have no values! (TODO List)
 
 ``` r
 sim_data <- simulate_crisis_data(

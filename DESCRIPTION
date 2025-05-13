@@ -1,0 +1,31 @@
+Package: nurah
+Title: Testing causal models of mortality in crisis-affected populations
+Version: 0.1.0
+Authors@R: 
+    c(person(given = "OJ",
+             family = "Watson",
+             role = c("aut", "cre"),
+             email = "oj.watson@hotmail.co.uk",
+             comment = c(ORCID = "0000-0003-2374-0741")))
+Description: nurah is an R package designed as a research compendium, focused on evaluating the feasibility of estimating mortality in humanitarian crises. It utilises statistical models, directed acyclic graphs (DAGs), and explores data availability challenges to produce robust and actionable mortality estimates.
+License: MIT + file LICENSE
+Depends: 
+    R (>= 2.10)
+Imports:
+    brms,
+    dagitty,
+    ggdag,
+    ggplot2,
+    here,
+    magrittr,
+    rlang,
+    ragg
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Config/testthat/edition: 3
