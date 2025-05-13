@@ -155,6 +155,7 @@ summary(fit)
 - Aggregation (how data collected at different spatial or temporal resolution could be aggregated and impact on model identifiability)
 - Custom model formula into model fit
 - Model summary plots and summaries for assessing identifiability against DAG
+- Identify where to pull in http://robindenz1.github.io/simDAG/index.html or keep distinct
 
 
 
