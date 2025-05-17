@@ -19,7 +19,8 @@ Imports:
     here,
     magrittr,
     rlang,
-    ragg
+    ragg, 
+    simDAG
 Suggests:
     knitr,
     rmarkdown,
