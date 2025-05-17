@@ -117,7 +117,7 @@ sim_data <- simulate_crisis_data(
 Fit a Bayesian hierarchical model to estimate indirect mortality using simulated data:
 
 ```r
-fit <- estimate_indirect_mortality(
+fit <- fit_dag(
   data = sim_data,
   dag = dag,
   outcome = "Population mortality",
