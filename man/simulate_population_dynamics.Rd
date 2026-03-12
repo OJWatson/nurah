@@ -47,29 +47,3 @@ Simulates changes in population over time for each region, driven by daily inwar
 and outward movements of internally displaced persons (IDPs). This function updates
 the population for each day based on the previous day's population and net IDP flow.
 }
-\details{
-The population on the first day for each region is set to the given
-\code{initial_population}. Thereafter, for each subsequent day (per region), the
-population is updated as:
-\deqn{population_{t} = population_{t-1} + \text{IDP_in}_{t} - \text{IDP_out}_{t}}
-If only a single net flow column is available (e.g., total net change in population),
-specify that column as \code{idp_in_col} and set \code{idp_out_col = NULL} (or leave
-it absent in the data). In that case, positive values in the inflow column will
-increase the population and negative values will decrease it.
-
-If no IDP flow columns are present in \code{daily_data}, this function will simply
-assign the initial population to all days (i.e., population remains constant over time
-in each region).
-}
-\examples{
-# Example daily data for 2 regions over 3 days
-daily <- data.frame(
-  region = rep(c("Region1", "Region2"), each = 3),
-  date = rep(seq.Date(as.Date("2021-01-01"), by = "day", length.out = 3), 2),
-  idp_in = c(5, 2, 0,  3, 1, 0),   # IDP inflows
-  idp_out = c(1, 0, 0,  2, 2, 1)   # IDP outflows
-)
-init_pop <- c(Region1 = 100, Region2 = 200)
-result <- simulate_population_dynamics(daily, initial_population = init_pop)
-result$population  # population trajectory for each region
-}

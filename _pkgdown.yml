@@ -1,0 +1,38 @@
+url: https://ojwatson.github.io/nurah
+title: nurah
+template:
+  bootstrap: 5
+  bootswatch: flatly
+development:
+  mode: auto
+navbar:
+  structure:
+    left: [home, intro, reference, articles]
+    right: [search, github]
+  components:
+    home:
+      icon: fa-home fa-lg
+      href: index.html
+      aria-label: Home
+    intro:
+      text: Get started
+      href: articles/nurah_vignette.html
+    reference:
+      text: Reference
+      href: reference/index.html
+    articles:
+      text: Articles
+      menu:
+      - text: Package Vignette
+        href: articles/nurah_vignette.html
+    github:
+      icon: fa-github fa-lg
+      href: https://github.com/ojwatson/nurah
+      aria-label: GitHub
+repo:
+  url:
+    home: https://github.com/ojwatson/nurah/
+    source: https://github.com/ojwatson/nurah/blob/main/
+    issue: https://github.com/ojwatson/nurah/issues/
+    user: https://github.com/ojwatson/
+

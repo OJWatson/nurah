@@ -40,25 +40,3 @@ Aggregates detailed daily simulation outputs into the specified temporal resolut
 (e.g., weekly, monthly) by region. This function sums flow variables over each
 period and carries forward stock variables like population as of the end of each period.
 }
-\details{
-The function first determines the period intervals either from \code{time_seq_out}
-or by generating a sequence based on \code{start_date} and \code{resolution}. It then
-assigns each daily record to a period. Aggregation is performed by grouping by region
-(all region hierarchy columns) and period start, and summing all numeric columns. For
-stock variables such as population, the function automatically takes the last observed
-value in each period (instead of summing). Additional logic can be added for other
-stock variables if needed.
-}
-\examples{
-# Create a simple daily dataset for one region
-daily <- data.frame(
-  region = "Region1",
-  date = seq.Date(as.Date("2021-01-01"), by = "day", length.out = 10),
-  cases = 1:10,          # some flow variable (e.g., daily cases)
-  population = 100 + 0:9 # a stock variable that increases daily
-)
-# Aggregate to weekly periods (2 weeks from the start date)
-weekly <- aggregate_simulated_data(daily, resolution = "week")
-weekly
-# The 'cases' for each week are summed, 'population' is the last day's population in that week.
-}

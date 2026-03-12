@@ -67,13 +67,7 @@ library(ggdag)
 # Set ggplot theme
 theme_set(theme_minimal(base_size = 12))
 
-# Source nurah functions (replace with library(nurah) when packaged)
-source("R/dag.R")
-source("R/simulate.R")
-source("R/fit.R")
-source("R/study.R")
-source("R/structures.R")
-source("R/utils.R")
+library(nurah)
 ```
 
 ---

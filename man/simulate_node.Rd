@@ -23,16 +23,9 @@ include at least:
 \code{NULL} if none).
 \item \code{dist}: Distribution type for the node's stochastic simulation. For
 example, \code{"normal"} for a continuous variable, \code{"poisson"} for
-counts, \code{"binary"} (or \code{"bernoulli"}) for 0/1 outcomes, or
-\code{"none"} for deterministic.
-\item Additional parameters specific to the distribution and relationship. For
-example, \code{formula} (a function defining the deterministic relationship
-between parent values and this node's expected value), \code{mean} or
-\code{base} for a baseline value (if no parents), \code{sd} for standard
-deviation (for normal noise), etc. If \code{dag_params$effect_size} is
-provided (as a numeric vector corresponding to each parent in \code{parents}),
-it will be used to compute a linear combination of parent values when no
-explicit formula is given.
+counts, \code{"negbin"} for negative binomial, \code{"binary"} (or
+\code{"bernoulli"}) for 0/1 outcomes, or \code{"none"} for deterministic.
+\item Additional parameters specific to the distribution and relationship.
 }}
 
 \item{noise_level}{Numeric factor to scale the stochastic noise. \code{noise_level = 0}
@@ -40,58 +33,9 @@ produces deterministic output (no randomness), while \code{noise_level = 1} uses
 full noise as specified in \code{dag_params}. Default is 1.}
 }
 \value{
-A numeric vector of simulated values for the node, with length equal to the
-number of observations (rows) in \code{parents_data} (or the specified number of
-observations if \code{parents_data} is a list). This vector can be added as a new
-column in the simulation output for the node.
+A numeric vector of simulated values for the node.
 }
 \description{
 Generates simulated values for one node in the DAG, given its parent values and
 predefined parameters for its distribution and relationship.
-}
-\details{
-The function first computes the deterministic component of the node's value
-based on its parents and specified relationship. If a \code{formula} function is
-provided in \code{dag_params}, it will be called with the parent values to compute
-an expected value for the node. If no parents and a baseline value (e.g., \code{mean})
-is provided, that baseline is used (recycled to the needed length). If no formula or
-baseline is given, and effect sizes are provided for parent relationships, the
-deterministic value is computed as the sum of each parent value multiplied by its
-corresponding \code{effect_size}. If none of these are provided, the deterministic
-component defaults to 0.
-
-Then, based on the specified \code{dist}, random noise is added as follows:
-\itemize{
-\item \code{"normal"}: Adds Gaussian noise with standard deviation \code{sd}
-(from \code{dag_params}, default 1 if not provided), scaled by \code{noise_level}.
-The deterministic result (or baseline) is treated as the mean.
-\item \code{"poisson"}: Treats the deterministic result as the rate (lambda) and
-draws Poisson random values.
-\item \code{"binary"} or \code{"bernoulli"}: Treats the deterministic result as a
-probability (between 0 and 1) and draws 0/1 outcomes (using \code{rbinom}
-with size = 1).
-\item \code{"none"} or if no \code{dist} is given: Returns the deterministic
-result without additional noise.
-\item Any unrecognized \code{dist}: A warning is issued and the deterministic
-result is returned as-is.
-}
-
-If the node has no parents and no formula, a constant value can be simulated by
-providing a distribution and parameters (for example, \code{dist = "normal", mean = 5, sd = 1}
-will ignore \code{parents_data} and produce values around 5).
-}
-\examples{
-# Simulate a node with no parents (deterministic constant)
-simulate_node(node = "X", parents_data = data.frame(),
-             dag_params = list(dist = "normal", mean = 5, sd = 1), noise_level = 0.0)
-#> [1] 5 5 5 ...  (all values ~5 with no noise)
-
-# Simulate a node Y with parent X, linear effect and some noise
-set.seed(123)
-X_vals <- rnorm(100, mean = 10, sd = 2)
-parents_data <- data.frame(X = X_vals)
-dag_params <- list(parents = "X", effect_size = 0.5, dist = "normal", sd = 1)
-Y_vals <- simulate_node(node = "Y", parents_data = parents_data,
-                        dag_params = dag_params, noise_level = 1)
-# Y_vals is roughly 0.5 * X_vals plus random noise with sd = 1.
 }

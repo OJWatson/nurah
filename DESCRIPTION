@@ -6,8 +6,13 @@ Authors@R:
              family = "Watson",
              role = c("aut", "cre"),
              email = "oj.watson@hotmail.co.uk",
-             comment = c(ORCID = "0000-0003-2374-0741")))
+             comment = c(ORCID = "0000-0003-2374-0741")),
+      person(given = "Paula",
+             family = "Christen",
+             role = "aut",
+             email = "paula.christen16@imperial.ac.uk"))
 Description: nurah is an R package designed as a research compendium, focused on evaluating the feasibility of estimating mortality in humanitarian crises. It utilises statistical models, directed acyclic graphs (DAGs), and explores data availability challenges to produce robust and actionable mortality estimates.
+URL: https://ojwatson.github.io/nurah
 License: MIT + file LICENSE
 Depends: 
     R (>= 2.10)
@@ -19,14 +24,15 @@ Imports:
     here,
     magrittr,
     rlang,
-    ragg, 
-    simDAG
+    ragg
 Suggests:
     knitr,
+    pkgdown,
     rmarkdown,
+    simDAG,
     testthat (>= 3.0.0)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Config/testthat/edition: 3

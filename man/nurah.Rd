@@ -11,6 +11,13 @@ the feasibility of estimating mortality in humanitarian crises. It utilises
 statistical models, directed acyclic graphs (DAGs), and explores data
 availability challenges to produce robust and actionable mortality estimates.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://ojwatson.github.io/nurah}
+}
+
+}
 \author{
 \strong{Maintainer}: OJ Watson \email{oj.watson@hotmail.co.uk} (\href{https://orcid.org/0000-0003-2374-0741}{ORCID})
 

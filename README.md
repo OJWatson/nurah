@@ -11,6 +11,7 @@ developed.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repos
 [![Codecov test
 coverage](https://codecov.io/gh/OJWatson/nurah/graph/badge.svg)](https://app.codecov.io/gh/OJWatson/nurah)
 [![R-CMD-check](https://github.com/OJWatson/nurah/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/OJWatson/nurah/actions/workflows/R-CMD-check.yaml)
+[![pkgdown](https://github.com/OJWatson/nurah/actions/workflows/pkgdown.yaml/badge.svg)](https://ojwatson.github.io/nurah)
 <!-- badges: end -->
 
 `nurah` is an R package designed as a research compendium to evaluate

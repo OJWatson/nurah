@@ -12,7 +12,10 @@ simulate_crisis_data(
   resolution = "month",
   spatial_structure = 1,
   initial_population = 10000,
-  noise_level = 1
+  noise_level = 1,
+  mortality_node = NULL,
+  mortality_phi = 1,
+  mortality_intercept = -8
 )
 }
 \arguments{
@@ -64,12 +67,19 @@ Defaults to 10000 for all regions.}
 \item{noise_level}{Numeric factor to scale stochastic noise in node simulations.
 \code{noise_level = 0} produces fully deterministic output, while \code{noise_level = 1}
 uses the full specified randomness. Defaults to 1.}
+
+\item{mortality_node}{Character name of the mortality outcome node. If specified,
+this node will be simulated using negative binomial distribution with population offset.}
+
+\item{mortality_phi}{Overdispersion parameter for negative binomial mortality. Default 1.}
+
+\item{mortality_intercept}{Baseline log-rate for mortality (on log scale). Default -8
+(approximately 0.03 deaths per 1000 per day).}
 }
 \value{
 A data frame of simulated indicators aggregated at the requested time
-resolution. It contains one row per region per period, with a \code{date} column
-indicating the period start date, and columns for each simulated indicator (node)
-as well as \code{population}.
+resolution (default: monthly). Contains one row per governorate per month with columns
+for each simulated indicator including mortality counts (Y_it) and population (N_it).
 }
 \description{
 Generates a synthetic crisis dataset over time and across regions, using a
@@ -78,48 +88,18 @@ function orchestrates the simulation by setting up time and space dimensions,
 simulating each indicator (node) in the DAG, handling dynamic population changes
 due to IDP flows, and aggregating results to the desired time resolution.
 }
-\details{
-This function performs the following steps:
-\enumerate{
-\item Validates the temporal inputs and generates a daily date sequence and an
-output period sequence using \code{setup_temporal_structure()}.
-\item Prepares the spatial structure (region hierarchy and names) using
-\code{setup_spatial_structure()}.
-\item Initializes a daily data frame with one row per region per day.
-\item Determines the simulation order of nodes using
-\code{topological_sort_dag()} (ensuring that parent nodes are simulated
-before their children).
-\item Simulates each non-population node's daily values in order using
-\code{simulate_node()}, and adds them as new columns to the daily data.
-\item Simulates dynamic population changes (if a population node is defined)
-using \code{simulate_population_dynamics()}, updating the population column
-based on IDP inflows/outflows and initial populations.
-\item Aggregates the daily data to the specified output resolution using
-\code{aggregate_simulated_data()}.
-}
-
-The \code{nurah_dag} object provides the structural relationships between nodes.
-Each directed edge in \code{dag$parameters} has an \code{effect_size} and an optional
-\code{lag} (in days). For each node, if no explicit formula is provided, the expected
-value is computed as the sum of its parent values (lagged by the specified \code{lag})
-each multiplied by its \code{effect_size}. Nodes with no parents default to a baseline
-of 0 (unless a specific baseline or distribution is defined). If the DAG includes a
-"population" node, that node's value is simulated via dynamic population flows rather
-than the static DAG relationships.
-}
 \examples{
-# Define a simple DAG: A -> B -> C
-nodes <- c("A", "B", "C")
-edges <- data.frame(from = c("A", "B"), to = c("B", "C"))
-parameters <- data.frame(from = c("A", "B"), to = c("B", "C"),
-                         effect_size = c(1.0, 1.0), lag = c(0, 0))
-dag <- define_dag(nodes, edges, parameters)
-sim_data <- simulate_crisis_data(dag, start_date = "2020-01-01", n_periods = 2,
-                                 resolution = "month", spatial_structure = paste0("region", 1:2),
-                                 initial_population = 10000, noise_level = 0.5)
+# Simulate 10 governorates x 12 months with mortality outcome
+dag <- checchi_2017_dag(parameters = dummy_checchi_2017_parameters())
+sim_data <- simulate_crisis_data(
+  dag,
+  start_date = "2023-10-01",
+  n_periods = 12,
+  resolution = "month",
+  spatial_structure = paste0("gov", 1:10),
+  initial_population = 100000,
+  noise_level = 1,
+  mortality_node = "Population mortality"
+)
 head(sim_data)
-
-# Using a built-in DAG (e.g., Checchi et al. 2017 model) if available:
-# sim_data <- simulate_crisis_data(checchi_2017_dag(parameters = params),
-#                                  start_date = "2020-01-01", n_periods = 6, resolution = "month")
 }

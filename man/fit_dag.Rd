@@ -9,6 +9,11 @@ fit_dag(
   dag,
   outcome,
   spatial_levels = NULL,
+  complete_case = FALSE,
+  missing_method = c("ipw", "imputation"),
+  ipw_formula = NULL,
+  ipw_stabilize = TRUE,
+  n_imputations = 5,
   priors = NULL,
   chains = 4,
   cores = getOption("mc.cores", 1),
@@ -18,6 +23,7 @@ fit_dag(
   control = list(),
   formula_override = NULL,
   family = gaussian(),
+  offset_col = NULL,
   ...
 )
 }
@@ -28,95 +34,81 @@ fit_dag(
 
 \item{outcome}{Name (string) of the dependent variable in \code{data} to model.}
 
-\item{spatial_levels}{Character vector of spatial grouping variables for hierarchical random effects. For example, \code{c("region", "district")} indicates a multilevel structure with districts nested within regions (first element is the highest level).}
+\item{spatial_levels}{Character vector of spatial grouping variables for hierarchical random effects.}
 
-\item{priors}{Optional brms prior specification. If \code{NULL}, defaults to weakly informative priors: \code{Normal(0, 0.5)} for fixed-effect coefficients and \code{HalfNormal(0, 1)} for standard deviation parameters. (The half-normal is implemented by using a \code{Normal(0,1)} prior on \code{sd} class parameters, which are inherently non-negative).}
+\item{complete_case}{Logical. If TRUE, drop rows with any missing values (default behavior pre-update).
+If FALSE (default), handle missingness using IPW or imputation.}
+
+\item{missing_method}{Method for handling missing data when complete_case = FALSE.
+Options: "ipw" (inverse probability weighting), "imputation" (multiple imputation via mice).
+Default is "ipw".}
+
+\item{ipw_formula}{Formula for the observation/missingness model (logistic regression predicting
+whether each row is fully observed). If NULL and missing_method = "ipw", a default formula
+using available non-outcome columns will be constructed.}
+
+\item{ipw_stabilize}{Logical. If TRUE, use stabilized IPW weights (recommended). Default TRUE.}
+
+\item{n_imputations}{Number of imputations if missing_method = "imputation". Default 5.}
+
+\item{priors}{Optional brms prior specification. If \code{NULL}, defaults to weakly informative priors.}
 
 \item{chains}{Number of MCMC chains to run (defaults to 4).}
 
-\item{cores}{Number of CPU cores to use for parallel sampling (defaults to \code{getOption("mc.cores", 1)}; set higher for parallel chains).}
+\item{cores}{Number of CPU cores to use for parallel sampling.}
 
 \item{iter}{Number of iterations per chain (including warmup; default 2000).}
 
-\item{warmup}{Number of warmup (burn-in) iterations per chain (default is half of \code{iter} if not specified).}
+\item{warmup}{Number of warmup (burn-in) iterations per chain.}
 
-\item{seed}{Random seed for reproducibility (optional).}
+\item{seed}{Random seed for reproducibility.}
 
-\item{control}{A list of control parameters passed to Stan (e.g., \code{list(adapt_delta = 0.95)} to help with convergence).}
+\item{control}{A list of control parameters passed to Stan.}
 
-\item{formula_override}{Optional formula object to use as the model formula, overriding the default formula construction from the DAG. If provided, this formula is used as-is (the user should include any desired random effects terms in it).}
+\item{formula_override}{Optional formula object to use as the model formula.}
 
-\item{family}{The likelihood family for the outcome, specified as a brms family object. Defaults to \code{gaussian()} (normal) for continuous outcomes; can be changed to, e.g., \code{binomial()} or \code{poisson()} depending on the \code{outcome}.}
+\item{family}{The likelihood family for the outcome. Defaults to \code{gaussian()} for continuous
+outcomes. For mortality counts, use \code{negbinomial()} with offset.}
 
-\item{...}{Additional arguments passed to \code{brms::brm()}, such as \code{sample_prior}, \code{control} settings, etc.}
+\item{offset_col}{Name of the population/offset column for count models. If provided, log(offset)
+will be added to the model.}
+
+\item{...}{Additional arguments passed to \code{brms::brm()}.}
 }
 \value{
-A \code{brmsfit} object containing the fitted Bayesian model (result of the \code{brm()} call).
+A \code{brmsfit} object (or list of fits for imputation) containing the fitted Bayesian model.
 }
 \description{
 This function constructs and fits a Bayesian hierarchical linear model (via \strong{brms} and Stan)
 to estimate "indirect mortality" given a user-specified causal DAG and observed data. It uses
 the DAG to determine which predictors (direct causes of the outcome) to include, and adds
-specified spatial hierarchy levels as random intercept effects. The modeling approach
-follows principles from McElreath's \emph{Statistical Rethinking} book, using DAGs to inform model
-structure and employing weakly-informative priors and partial pooling for robust inference.
+specified spatial hierarchy levels as random intercept effects.
 }
 \details{
-\strong{Model Construction:} By default, the fixed-effect formula is derived from the provided DAG.
-The DAG's structure is used to include only the direct causes (parents) of the outcome node as
-predictors in a linear model for the outcome. This ensures a principled, causally-informed model
-that avoids adding extraneous variables or adjusting for mediators/colliders without causal justification. All such predictor variables must exist as columns in \code{data}.
-
-\strong{Hierarchical Structure:} The \code{spatial_levels} argument allows adding random intercepts for
-specified grouping factors to model multi-level variation (e.g., variation between regions and
-districts). If multiple levels are provided, they are assumed to be nested in the order given
-(e.g., \code{region/district}). Including hierarchical random effects induces partial pooling across
-these groups, which guards against overfitting by shrinking extreme group-level estimates toward the overall mean. This reflects the idea that groups with less data get stronger shrinkage, a key benefit of multilevel models described in \emph{Statistical Rethinking}.
-
-\strong{Priors:} In line with \emph{Statistical Rethinking} recommendations, the function uses conservative
-default priors to regularize estimates. Population-level coefficients get a Normal(0, 0.5) prior,
-a mildly informative prior assuming predictors are on roughly standard scales. Standard deviations
-of group-level effects (and the residual error) get a half-normal prior (implemented as Normal(0,1)
-on the standard deviation). These priors provide gentle skepticism toward very large effects or variances, while still being weak enough not to overwhelm the data.
-
-\strong{Missing Data:} Rows with missing values in the outcome or any of the predictor or grouping variables used are dropped before fitting, since \code{brms} (and the underlying Stan sampler) cannot handle \code{NA} values.
-
-\strong{Model Fitting:} The model is fit using Hamiltonian Monte Carlo via \code{brms::brm()}. By default, a
-Gaussian (normal) likelihood is used for a continuous outcome; this can be changed by specifying the
-\code{family} argument (for example, use \code{binomial()} for binary mortality outcomes). You can pass further
-arguments to \code{brm()} via \code{...} for additional control (e.g., setting \code{iter}, \code{warmup}, or \code{adapt_delta}
-for more complex models). The result is a \code{brmsfit} object containing the posterior samples and model details,
-which can be examined with standard methods (\code{summary()}, \code{plot()}, posterior predictive checks, etc.).
+\strong{Missingness Handling (NEW):}
+When \code{complete_case = FALSE}, the function implements one of two approaches:
+\enumerate{
+\item \strong{IPW (Inverse Probability Weighting)}: Estimates P(fully observed | covariates) using
+logistic regression, then weights each observation by 1/P in the outcome model. This
+corrects for selection bias under MAR (missing at random) assumptions. Stabilized weights
+(recommended) multiply by marginal P(observed) to reduce variance.
+\item \strong{Multiple Imputation}: Uses the \code{mice} package to generate multiple imputed datasets,
+fits the model to each, and pools results using Rubin's rules.
+}
 }
 \examples{
 \dontrun{
-# Define a causal DAG: suppose 'mortality' is directly caused by 'nutrition' and 'access_to_care'
-dag <- define_dag(
-  mortality ~ nutrition + access_to_care,
-  nutrition ~ socioeconomic_status,
-  access_to_care ~ socioeconomic_status + region
+# Fit with IPW to handle missingness
+fit <- fit_dag(
+  data = sim_data_missing,
+  dag = dag,
+  outcome = "Population mortality",
+  spatial_levels = "region",
+  complete_case = FALSE,
+  missing_method = "ipw",
+  family = negbinomial(),
+  offset_col = "population"
 )
-
-# Simulate some data consistent with the DAG structure
-set.seed(42)
-N <- 100
-region <- rep(1:5, each = 20)
-district <- rep(1:20, each = 5)
-socioeconomic_status <- rnorm(N)
-nutrition <- 0.5 * scale(socioeconomic_status)[,1] + rnorm(N, 0, 0.1)
-region_eff_access <- rnorm(5, 0, 0.5)       # region effect on access_to_care
-access_to_care <- 0.5 * scale(socioeconomic_status)[,1] + region_eff_access[region] + rnorm(N, 0, 0.5)
-region_eff_mort <- rnorm(5, 0, 1.0)       # region effect on mortality
-district_eff_mort <- rnorm(20, 0, 0.2)      # district effect on mortality
-mortality <- -0.3 * nutrition - 0.5 * access_to_care + region_eff_mort[region] +
-             district_eff_mort[district] + rnorm(N, 0, 0.5)
-data <- data.frame(region, district, socioeconomic_status, nutrition, access_to_care, mortality)
-
-# Fit the Bayesian model using the DAG for predictors and region/district as random effects
-fit <- fit_dag(data = data, dag = dag, outcome = "mortality",
-                                   spatial_levels = c("region", "district"),
-                                   iter = 1000, chains = 2)
-summary(fit)
 }
 
 }
