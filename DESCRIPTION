@@ -29,8 +29,7 @@ Imports:
     ragg, 
     RcppEigen,
     rlang,
-    rstan,
-    stanheaders
+    rstan
 Suggests:
     knitr,
     pkgdown,
