@@ -17,18 +17,20 @@ License: MIT + file LICENSE
 Depends: 
     R (>= 4.5.0)
 Imports:
+    BH, 
     brms,
     dagitty,
+    dplyr,
     ggdag,
     ggplot2,
     here,
     magrittr,
-    rlang,
-    ragg, 
     mice, 
-    dplyr,
-    BH, 
-    rstan
+    ragg, 
+    RcppEigen,
+    rlang,
+    rstan,
+    stanheaders
 Suggests:
     knitr,
     pkgdown,
