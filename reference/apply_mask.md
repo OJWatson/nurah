@@ -1,0 +1,80 @@
+# Apply Missingness Mask to Simulated Data
+
+Forces the simulated dataset to follow an external missingness pattern
+(e.g., from Gaza data).
+
+## Usage
+
+``` r
+apply_mask(
+  data,
+  mask,
+  gov_col = NULL,
+  date_col = "date",
+  mode = c("force", "calibrate")
+)
+```
+
+## Arguments
+
+- data:
+
+  Data frame of simulated data at governorate-month level
+
+- mask:
+
+  Data frame specifying missingness pattern with columns:
+
+  - gov: governorate identifier (must match data)
+
+  - month: month identifier or date
+
+  - var: variable name
+
+  - observed: 1 if observed, 0 if missing
+
+- gov_col:
+
+  Name of governorate column in data (default: auto-detected)
+
+- date_col:
+
+  Name of date/month column in data (default: "date")
+
+- mode:
+
+  How to apply mask:
+
+  - "force": directly apply mask (set to NA where observed=0)
+
+  - "calibrate": estimate missingness parameters to match mask
+    proportions, then simulate
+
+## Value
+
+Data frame with missingness applied according to mask
+
+## Examples
+
+``` r
+dag <- checchi_2017_dag(parameters = dummy_checchi_2017_parameters())
+sim_data <- simulate_crisis_data(
+  dag,
+  start_date = "2023-10-01",
+  n_periods = 12,
+  resolution = "month",
+  spatial_structure = c("North Gaza", "Gaza City"),
+  initial_population = 100000,
+  noise_level = 1,
+  mortality_node = "Population mortality"
+)
+
+# Create a mask matching Gaza reporting patterns
+gaza_mask <- data.frame(
+  gov = rep(c("North Gaza", "Gaza City"), each = 6),
+  month = rep(1:6, 2),
+  var = "Nutritional status",
+  observed = c(1,1,0,0,0,0, 1,1,1,0,0,0)  # reporting stops mid-crisis
+)
+data_masked <- apply_mask(sim_data, gaza_mask, mode = "force")
+```

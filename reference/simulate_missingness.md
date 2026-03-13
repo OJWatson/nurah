@@ -1,0 +1,104 @@
+# Simulate Missingness in Predictor Variables
+
+Generates observation indicators S_itk ~ Bernoulli(pi_itk) for each
+predictor column k, where logit(pi_itk) depends on the specified
+missingness regime.
+
+## Usage
+
+``` r
+simulate_missingness(
+  data,
+  predictors,
+  regime = c("MCAR", "MAR", "MNAR"),
+  pi_base = 0.8,
+  mar_drivers = NULL,
+  mar_weights = NULL,
+  mnar_omega = 0,
+  outcome_missing = FALSE,
+  outcome_col = NULL
+)
+```
+
+## Arguments
+
+- data:
+
+  Data frame containing simulated data at governorate-month level
+
+- predictors:
+
+  Character vector of predictor column names to apply missingness to
+
+- regime:
+
+  Missingness regime: "MCAR", "MAR", or "MNAR"
+
+- pi_base:
+
+  Baseline observation probability (for MCAR or intercept)
+
+- mar_drivers:
+
+  Character vector of column names driving MAR missingness (e.g.,
+  conflict indicators)
+
+- mar_weights:
+
+  Named numeric vector of weights for MAR drivers on logit scale
+
+- mnar_omega:
+
+  MNAR sensitivity parameter: weight on the (unobserved) value itself
+
+- outcome_missing:
+
+  Logical: also apply missingness to outcome variable? Default FALSE.
+
+- outcome_col:
+
+  Name of outcome column if outcome_missing = TRUE
+
+## Value
+
+A list containing:
+
+- data: Original data with values set to NA where not observed
+
+- observed_indicators: Data frame of observation indicators S_itk
+  (1=observed, 0=missing)
+
+- missingness_params: List of parameters used
+
+## Details
+
+Three missingness regimes: (a) MCAR: S_itk ~ Bernoulli(pi_base)
+independently (b) MAR-access: logit(pi_itk) = alpha + w_A*A_it +
+w_D*D_it + ... (c) MNAR-severity: logit(pi_itk) = alpha + w_A*A_it +
+omega*X_itk (depends on unobserved value)
+
+## Examples
+
+``` r
+dag <- checchi_2017_dag(parameters = dummy_checchi_2017_parameters())
+sim_data <- simulate_crisis_data(
+  dag,
+  start_date = "2023-10-01",
+  n_periods = 12,
+  resolution = "month",
+  spatial_structure = paste0("gov", 1:10),
+  initial_population = 100000,
+  noise_level = 1,
+  mortality_node = "Population mortality"
+)
+
+# Apply MAR missingness driven by conflict intensity
+result <- simulate_missingness(
+  data = sim_data,
+  predictors = c("Nutritional status", "Burden of endemic infectious diseases"),
+  regime = "MAR",
+  pi_base = 0.7,
+  mar_drivers = c("Exposure to armed attacks or mechanical force of nature"),
+  mar_weights = c("Exposure to armed attacks or mechanical force of nature" = -0.5)
+)
+```

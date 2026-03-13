@@ -1,0 +1,9 @@
+pandoc: 3.1.11
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  nurah_vignette: nurah_vignette.html
+last_built: 2026-03-13T15:12Z
+urls:
+  reference: https://ojwatson.github.io/nurah/reference
+  article: https://ojwatson.github.io/nurah/articles
