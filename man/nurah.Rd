@@ -15,10 +15,16 @@ availability challenges to produce robust and actionable mortality estimates.
 Useful links:
 \itemize{
   \item \url{https://ojwatson.github.io/nurah}
+  \item \url{https://ojwatson.github.io/nurah/}
 }
 
 }
 \author{
 \strong{Maintainer}: OJ Watson \email{oj.watson@hotmail.co.uk} (\href{https://orcid.org/0000-0003-2374-0741}{ORCID})
+
+Authors:
+\itemize{
+  \item Paula Christen \email{paula.christen16@imperial.ac.uk}
+}
 
 }

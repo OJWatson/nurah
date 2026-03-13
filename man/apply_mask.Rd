@@ -40,6 +40,19 @@ Data frame with missingness applied according to mask
 Forces the simulated dataset to follow an external missingness pattern (e.g., from Gaza data).
 }
 \examples{
+
+dag <- checchi_2017_dag(parameters = dummy_checchi_2017_parameters())
+sim_data <- simulate_crisis_data(
+  dag,
+  start_date = "2023-10-01",
+  n_periods = 12,
+  resolution = "month",
+  spatial_structure = c("North Gaza", "Gaza City"),
+  initial_population = 100000,
+  noise_level = 1,
+  mortality_node = "Population mortality"
+)
+
 # Create a mask matching Gaza reporting patterns
 gaza_mask <- data.frame(
   gov = rep(c("North Gaza", "Gaza City"), each = 6),

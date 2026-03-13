@@ -282,7 +282,7 @@ visualise_dag <- function(dag,
   }
 
   # create default plot - use ggplot base to avoid double-drawing edges
-  ggplot2::ggplot(tidy_dag, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)) +
+  ggplot2::ggplot(tidy_dag, ggplot2::aes(x = .data$x, y = .data$y, xend = .data$xend, yend = .data$yend)) +
     ggdag::geom_dag_edges(edge_color = "gray40") +
     ggdag::geom_dag_point(color = node_color, size = 8) +
     ggdag::geom_dag_label(ggplot2::aes(label = .data$name), size = label_size) +
@@ -381,7 +381,7 @@ topological_sort_dag <- function(dag) {
     all_nodes <- unique(c(as.character(params_df$from), as.character(params_df$to)))
   } else {
     # If no edges defined in parameters, try to get nodes from dagitty object
-    all_nodes <- tryCatch(dagitty::names(dag$dag), error = function(e) NULL)
+    all_nodes <- tryCatch(names(dag$dag), error = function(e) NULL)
     if (is.null(all_nodes)) {
       stop("DAG contains no nodes or edges to sort.")
     }

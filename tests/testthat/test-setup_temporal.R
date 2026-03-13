@@ -27,8 +27,8 @@ test_that("setup_temporal_structure handles non-period-aligned end_date", {
 
 test_that("setup_temporal_structure returns correct types", {
   res <- setup_temporal_structure("2025-01-01", n_periods=1, resolution="week")
-  expect_type(res$time_seq_daily, "double")
-  expect_type(res$time_seq_out, "double")
+  expect_type(res$time_seq_daily, "integer")
+  expect_type(res$time_seq_out, "integer")
   expect_s3_class(res$time_seq_daily, "Date")
   expect_s3_class(res$time_seq_out, "Date")
 })

@@ -490,6 +490,18 @@ simulate_node <- function(node, parents_data, dag_params, noise_level = 1) {
 #'   (c) MNAR-severity: logit(pi_itk) = alpha + w_A*A_it + omega*X_itk (depends on unobserved value)
 #'
 #' @examples
+#' dag <- checchi_2017_dag(parameters = dummy_checchi_2017_parameters())
+#' sim_data <- simulate_crisis_data(
+#'   dag,
+#'   start_date = "2023-10-01",
+#'   n_periods = 12,
+#'   resolution = "month",
+#'   spatial_structure = paste0("gov", 1:10),
+#'   initial_population = 100000,
+#'   noise_level = 1,
+#'   mortality_node = "Population mortality"
+#' )
+#'
 #' # Apply MAR missingness driven by conflict intensity
 #' result <- simulate_missingness(
 #'   data = sim_data,
@@ -500,6 +512,7 @@ simulate_node <- function(node, parents_data, dag_params, noise_level = 1) {
 #'   mar_weights = c("Exposure to armed attacks or mechanical force of nature" = -0.5)
 #' )
 #' @export
+#' @importFrom stats sd
 simulate_missingness <- function(data,
                                  predictors,
                                  regime = c("MCAR", "MAR", "MNAR"),
@@ -636,6 +649,19 @@ simulate_missingness <- function(data,
 #' @return Data frame with missingness applied according to mask
 #'
 #' @examples
+#'
+#' dag <- checchi_2017_dag(parameters = dummy_checchi_2017_parameters())
+#' sim_data <- simulate_crisis_data(
+#'   dag,
+#'   start_date = "2023-10-01",
+#'   n_periods = 12,
+#'   resolution = "month",
+#'   spatial_structure = c("North Gaza", "Gaza City"),
+#'   initial_population = 100000,
+#'   noise_level = 1,
+#'   mortality_node = "Population mortality"
+#' )
+#'
 #' # Create a mask matching Gaza reporting patterns
 #' gaza_mask <- data.frame(
 #'   gov = rep(c("North Gaza", "Gaza City"), each = 6),
