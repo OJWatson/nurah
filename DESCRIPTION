@@ -15,7 +15,7 @@ Description: nurah is an R package designed as a research compendium, focused on
 URL: https://ojwatson.github.io/nurah, https://ojwatson.github.io/nurah/
 License: MIT + file LICENSE
 Depends: 
-    R (>= 2.10)
+    R (>= 4.50)
 Imports:
     brms,
     dagitty,
