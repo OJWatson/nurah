@@ -26,7 +26,9 @@ Imports:
     rlang,
     ragg, 
     mice, 
-    dplyr
+    dplyr,
+    BH, 
+    rstan
 Suggests:
     knitr,
     pkgdown,
