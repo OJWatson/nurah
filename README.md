@@ -9,9 +9,9 @@
 and is being actively
 developed.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![Codecov test
-coverage](https://codecov.io/gh/OJWatson/nurah/graph/badge.svg)](https://app.codecov.io/gh/OJWatson/nurah)
-[![R-CMD-check](https://github.com/OJWatson/nurah/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/OJWatson/nurah/actions/workflows/R-CMD-check.yaml)
-[![pkgdown](https://github.com/OJWatson/nurah/actions/workflows/pkgdown.yaml/badge.svg)](https://ojwatson.github.io/nurah)
+coverage](https://codecov.io/gh/jameel-institute/nurah/graph/badge.svg)](https://app.codecov.io/gh/jameel-institute/nurah)
+[![R-CMD-check](https://github.com/jameel-institute/nurah/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jameel-institute/nurah/actions/workflows/R-CMD-check.yaml)
+[![pkgdown](https://github.com/jameel-institute/nurah/actions/workflows/pkgdown.yaml/badge.svg)](https://jameel-institute.github.io/nurah)
 <!-- badges: end -->
 
 `nurah` is an R package designed as a research compendium to evaluate
@@ -35,7 +35,7 @@ Install the latest version from GitHub:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("OJWatson/nurah")
+devtools::install_github("jameel-institute/nurah")
 ```
 
 ## Usage
@@ -151,8 +151,8 @@ summary(fit)
 
 ### Other Features To Describe/Finish/Test:
 
-- Simulating missingness in data observation (MCAR, MAR, MNAR) (https://github.com/OJWatson/nurah/tree/missingess/proxies)
-- Simulating proxies - data that is hoped to reflect a node but may have different effect size or directionality to node (https://github.com/OJWatson/nurah/tree/missingess/proxies)
+- Simulating missingness in data observation (MCAR, MAR, MNAR) (https://github.com/jameel-institute/nurah/tree/missingess/proxies)
+- Simulating proxies - data that is hoped to reflect a node but may have different effect size or directionality to node (https://github.com/jameel-institute/nurah/tree/missingess/proxies)
 - Aggregation (how data collected at different spatial or temporal resolution could be aggregated and impact on model identifiability)
 - Custom model formula into model fit
 - Model summary plots and summaries for assessing identifiability against DAG
@@ -165,10 +165,9 @@ summary(fit)
 For issues, feature requests, or support, please open an issue on
 GitHub:
 
-- [GitHub Issues](https://github.com/OJWatson/nurah/issues)
+- [GitHub Issues](https://github.com/jameel-institute/nurah/issues)
 
 ## References
 
-- Checchi et al. (2017). [“Public health information in crisis-affected
-  populations”](https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002181).
-  *PLOS Medicine.*
+- Checchi et al. (2017). [“Public health information in crisis-affected populations: a review of methods and their use for advocacy and action”]([https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002181](https://doi.org/10.1016/S0140-6736(17)30702-X)).
+  *Lancet*
