@@ -1470,7 +1470,7 @@ sessionInfo()
     ## [31] abind_1.4-8           withr_3.0.2           purrr_1.2.1          
     ## [34] desc_1.4.3            grid_4.5.3            polyclip_1.10-7      
     ## [37] stats4_4.5.3          inline_0.3.21         scales_1.4.0         
-    ## [40] MASS_7.3-65           cli_3.6.5             mvtnorm_1.3-5        
+    ## [40] MASS_7.3-65           cli_3.6.5             mvtnorm_1.3-6        
     ## [43] rmarkdown_2.30        ragg_1.5.1            generics_0.1.4       
     ## [46] RcppParallel_5.1.11-2 reshape2_1.4.5        cachem_1.1.0         
     ## [49] ggforce_0.5.0         rstan_2.32.7          stringr_1.6.0        
