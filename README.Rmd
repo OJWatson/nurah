@@ -18,8 +18,8 @@ knitr::opts_chunk$set(fig.width=14, fig.height=8, dpi=300)
 
 <!-- badges: start -->
 [![Project Status: WIP – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-[![Codecov test coverage](https://codecov.io/gh/OJWatson/nurah/graph/badge.svg)](https://app.codecov.io/gh/OJWatson/nurah)
-[![R-CMD-check](https://github.com/OJWatson/nurah/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/OJWatson/nurah/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/jameel-institute/nurah/graph/badge.svg)](https://app.codecov.io/gh/jameel-institute/nurah)
+[![R-CMD-check](https://github.com/jameel-institute/nurah/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jameel-institute/nurah/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `nurah` is an R package designed as a research compendium to evaluate the feasibility of estimating mortality in humanitarian crises. It leverages statistical modelling, directed acyclic graphs (DAGs), and simulations to address data availability challenges, producing robust and actionable mortality estimates.
@@ -38,7 +38,7 @@ Install the latest version from GitHub:
 
 ```r
 # install.packages("devtools")
-devtools::install_github("OJWatson/nurah")
+devtools::install_github("jameel-institute/nurah")
 ```
 
 ## Usage
@@ -133,8 +133,8 @@ summary(fit)
 
 For issues, feature requests, or support, please open an issue on GitHub:
 
-- [GitHub Issues](https://github.com/OJWatson/nurah/issues)
+- [GitHub Issues](https://github.com/jameel-institute/nurah/issues)
 
 ## References
 
-- Checchi et al. (2017). ["Public health information in crisis-affected populations"](https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002181). *PLOS Medicine.*
+- Checchi et al. (2017). ["Public health information in crisis-affected populations: a review of methods and their use for advocacy and action"](https://doi.org/10.1016/S0140-6736(17)30702-X). *Lancet*
